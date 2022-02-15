@@ -1,6 +1,7 @@
 # Knights Travails
 
 require 'set'
+require 'pry-byebug'
 
 # Square (Node) class
 class Knight
@@ -50,8 +51,8 @@ class Chess_Board
     @moves = []
   end
 
+  # Code to update adjacency list for board
   def update_board(knight, cur_pos)
-    # Build adjacency list
     valid_edge = knight.possible_moves(cur_pos)
     
     valid_edge.each do |edge|
@@ -73,16 +74,16 @@ class Chess_Board
 
     while queue.length > 0
       square, distance = queue.shift
-      p distance
-      return shortest(distance, predecessor_array, dst) if square == dst
+      knight.current_position = square
 
+      return shortest(distance, predecessor_array, dst) if square == dst
+      
       update_board(knight, knight.current_position)
 
       board[square].each do |moveable_square|
         unless visited.include?(moveable_square)
           predecessor_array.push([moveable_square, square])
           visited.add(moveable_square)
-          knight.current_position = moveable_square
           queue.push([ moveable_square, distance + 1 ])
         end
       end
@@ -118,6 +119,4 @@ end
 
 new_game = Chess_Board.new
 
-new_game.knight_moves([0,0], [3,3])
-puts ""
-puts new_game.board
+p new_game.knight_moves([0,0], [2,4])
