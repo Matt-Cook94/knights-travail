@@ -1,12 +1,12 @@
 # Knights Travails
 
 require 'set'
-require 'pry-byebug'
 
 # Square (Node) class
 class Knight
   attr_accessor :src, :dst, :current_position, :valid_moves
-  MOVES = [ [2,-1], [2,1], [1,2], [-1,2], [-2,1], [-2,-1], [-1,-2], [1,-2] ]
+
+  MOVES = [[2, -1], [2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2]].freeze
 
   def initialize(src, dst)
     @src = src
@@ -28,21 +28,10 @@ class Knight
     end
     valid_moves
   end
-
-end
-
-class Square
-  attr_accessor :row, :col
-
-  def initialize(row, col)
-    @row = row
-    @col = col
-  end
-
 end
 
 # Chess Board class
-class Chess_Board
+class ChessBoard
   attr_accessor :board, :knight
 
   def initialize
@@ -54,9 +43,10 @@ class Chess_Board
   # Code to update adjacency list for board
   def update_board(knight, cur_pos)
     valid_edge = knight.possible_moves(cur_pos)
-    
+
     valid_edge.each do |edge|
-      a, b = cur_pos, edge
+      a = cur_pos
+      b = edge
       board[a] = [] unless board.include?(a)
       board[b] = [] unless board.include?(b)
       board[a].push(b) unless board[a].include?(b)
@@ -70,7 +60,7 @@ class Chess_Board
     knight = Knight.new(src, dst)
     visited = Set.new([src])
     predecessor_array = [[src, nil]]
-    queue = [ [src, 0] ]
+    queue = [[src, 0]]
 
     while queue.length > 0
       square, distance = queue.shift
@@ -84,19 +74,19 @@ class Chess_Board
         unless visited.include?(moveable_square)
           predecessor_array.push([moveable_square, square])
           visited.add(moveable_square)
-          queue.push([ moveable_square, distance + 1 ])
+          queue.push([moveable_square, distance + 1])
         end
       end
 
     end
-    return -1
+    -1
   end
 
   def shortest(distance, array, dst)
     shortest = []
     predecessor = dst
 
-    until predecessor == nil
+    until predecessor.nil?
       array.each_index do |index|
         if array[index][0] == predecessor
           predecessor = array[index][1]
@@ -117,6 +107,6 @@ class Chess_Board
 end
 
 
-new_game = Chess_Board.new
+new_game = ChessBoard.new
 
 p new_game.knight_moves([0,0], [2,4])
